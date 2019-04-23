@@ -1,0 +1,46 @@
+version: '3.5'
+
+services:
+
+  nginx:
+    build:
+      context: ./
+      target: nginx
+    ports:
+      - '8080:80'
+    volumes:
+      - './public:/var/www/public:ro'
+    depends_on:
+      - php
+
+  php:
+    build:
+      context: ./
+      target: php_fpm
+    environment:
+      APP_ENV: dev
+    volumes:
+      - './:/var/www/'
+    depends_on:
+      - mongo
+
+  mongo:
+    image: mongo:4.0.6
+    volumes:
+      - './var/data:/data/db'
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: admin
+
+  mongo-express:
+    image: mongo-express
+    restart: always
+    ports:
+      - 8081:8081
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: admin
+      ME_CONFIG_MONGODB_ADMINPASSWORD: admin
+
+networks:
+  default:
+    name: blog-network
