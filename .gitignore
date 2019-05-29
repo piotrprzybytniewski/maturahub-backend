@@ -10,3 +10,6 @@
 
 /.idea/
 /config/jwt/*.pem
+.DS_Store
+.env.dist
+/config/
