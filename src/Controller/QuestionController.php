@@ -3,34 +3,28 @@
 
 namespace App\Controller;
 
-use App\DataTransformer\JSONToQuestionObjectTransformer;
 use App\Document\Question;
-use App\Document\User;
-use App\Repository\Question\MongoDBRepository;
-use App\Repository\UserRepository;
+use App\Repository\Question\QuestionRepositoryInterface;
 use App\Service\Database\QuestionService;
 use App\Service\RequestService;
-use App\Service\Response\ErrorService;
 use App\Service\Response\SuccessService;
 use App\Validator\QuestionValidator;
-use Doctrine\ODM\MongoDB\DocumentManager;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use Swagger\Annotations as SWG;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Serializer\SerializerInterface;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class QuestionController extends AbstractController
 {
     /**
-     * Returns a certain number of random questions depending on the limit parameter
+     * Returns a certain number of random questions depending on the limit parameter (1-20)
      *
-     * You need to provide limit parameter to get specified number of questions in response
+     * You need to provide limit parameter in range 1-20 to get specified number of questions in response. Default limit is 1
      *
-     * @Route("/api/questions/{limit<^[1-9]\d*>?1}", methods={"GET"})
+     * @Route("/api/questions/{limit<^[1-9]|1[0-9]|20>?1}", methods={"GET"})
      * @SWG\Response(
      *     response=200,
      *     description="Returns the specified number of random questions depending on the limit",
@@ -54,20 +48,18 @@ class QuestionController extends AbstractController
      */
     public function getQuestion(
         int $limit,
-        MongoDBRepository $questionRepository,
         SuccessService $successResponse,
-        ErrorService $errorResponse,
-        QuestionService $questionService
+        QuestionRepositoryInterface $questionRepository
     ): JsonResponse {
 
-        $questions = $questionService->findRandom($limit);
+        $questions = $questionRepository->findRandom($limit);
 
         return new JsonResponse($successResponse->setData($questions));
     }
 
     /**
      * @Route("/api/questions", methods={"POST"})
-     *     @SWG\Parameter(
+     * @SWG\Parameter(
      *          name="questions",
      *          in="body",
      *          type="json",
@@ -85,7 +77,17 @@ class QuestionController extends AbstractController
      * ),
      * @SWG\Response(
      *     response="400",
-     *     description="Incorect syntax of entity",
+     *     description="Bad request",
+     *     @SWG\Schema(
+     *         @SWG\Property(property="error", type="object",
+     *             @SWG\Property(property="code", type="integer", example=400),
+     *             @SWG\Property(property="message", type="string", example="Bad request")
+     *         )
+     *     )
+     * ),
+     * @SWG\Response(
+     *     response="422",
+     *     description="Returned when request data is incorrect and an error occured while transforming, validating ,inserting it.",
      *     @SWG\Schema(
      *         @SWG\Property(property="error", type="object",
      *             @SWG\Property(property="code", type="integer", example=400),
@@ -97,22 +99,21 @@ class QuestionController extends AbstractController
      */
     public function postQuestion(
         Request $request,
-        MongoDBRepository $questionRepository,
+        QuestionRepositoryInterface $questionRepository,
         RequestService $requestService,
-        ErrorService $errorResponse,
         SuccessService $successResponse,
         QuestionValidator $questionValidator
     ): JsonResponse {
         $questions = $requestService->getData($request);
-        try {
-            $questionValidator->validateQuestions($questions);
-        } catch (\Throwable $t) {
-            return new JsonResponse($errorResponse->setError(400, "Incorrect syntax of entity"), 400);
+        if (!$questions) {
+            throw new BadRequestHttpException();
         }
+
+        $questionValidator->validate($questions);
 
         $insertedIds = $questionRepository->insert($questions);
 
-        return new JsonResponse($successResponse->setData($insertedIds), 200);
+        return new JsonResponse($successResponse->setData($insertedIds));
     }
 
 

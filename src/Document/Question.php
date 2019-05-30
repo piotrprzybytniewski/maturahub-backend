@@ -69,7 +69,7 @@ class Question
     private $source;
 
     /**
-     * @SWG\Property(type="int")
+     * @SWG\Property(type="integer")
      * @Assert\Type("int")
      * @Assert\NotNull
      * @Assert\Length(

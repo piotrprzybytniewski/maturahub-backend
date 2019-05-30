@@ -18,7 +18,7 @@ class QuestionValidator
         $this->JSONToQuestionObjectTransformer = $JSONToQuestionObjectTransformer;
     }
 
-    public function validate($question)
+    public function validateOne($question)
     {
             $errors = $this->validator->validate($question);
             if (count($errors) > 0) {
@@ -26,11 +26,11 @@ class QuestionValidator
             }
     }
 
-    public function validateQuestions(array $questions)
+    public function validate(array $questions)
     {
         foreach ($questions as $question) {
                 $questionObject = $this->JSONToQuestionObjectTransformer->transform($question);
-                $this->validate($questionObject);
+                $this->validateOne($questionObject);
         }
     }
 }

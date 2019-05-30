@@ -6,10 +6,10 @@ namespace App\Service\Response;
 
 class SuccessService
 {
-    public function setData(array $content): array
+    public function setData(array $data): array
     {
         $response = [
-            "data" => $content
+            "data" => $data
         ];
         return $response;
     }
