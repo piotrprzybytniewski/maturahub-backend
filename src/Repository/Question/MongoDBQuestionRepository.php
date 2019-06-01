@@ -16,7 +16,8 @@ class MongoDBQuestionRepository implements QuestionRepositoryInterface
 
     public function __construct()
     {
-        $this->collection = (new Client($_ENV['MONGODB_URL']))->matura->question;
+        $dbName = (string) $_ENV['MONGODB_DB'];
+        $this->collection = (new Client($_ENV['MONGODB_URL']))->$dbName->question;
     }
 
     public function findRandom(int $limit): ?array

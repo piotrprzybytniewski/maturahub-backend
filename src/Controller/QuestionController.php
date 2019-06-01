@@ -4,11 +4,12 @@
 namespace App\Controller;
 
 use App\Document\Question;
+use App\Document\User;
 use App\Repository\Question\QuestionRepositoryInterface;
-use App\Service\Database\QuestionService;
 use App\Service\RequestService;
 use App\Service\Response\SuccessService;
 use App\Validator\QuestionValidator;
+use Doctrine\ODM\MongoDB\DocumentManager;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use Swagger\Annotations as SWG;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -16,6 +17,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class QuestionController extends AbstractController
 {
@@ -51,7 +53,6 @@ class QuestionController extends AbstractController
         SuccessService $successResponse,
         QuestionRepositoryInterface $questionRepository
     ): JsonResponse {
-
         $questions = $questionRepository->findRandom($limit);
 
         return new JsonResponse($successResponse->setData($questions));

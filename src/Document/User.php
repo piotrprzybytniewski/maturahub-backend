@@ -210,7 +210,7 @@ class User implements UserInterface
 
     public function getSalt()
     {
-        return '';
+//        return '';
     }
 
     public function eraseCredentials()
@@ -218,36 +218,11 @@ class User implements UserInterface
         // TODO: Implement eraseCredentials() method.
     }
 
-    public function isAccountNonExpired()
-    {
-        return true;
-    }
-
-    public function isAccountNonLocked()
-    {
-        return true;
-    }
-
-    public function isCredentialsNonExpired()
-    {
-        return true;
-    }
-
     public function isSuperAdmin()
     {
         return $this->hasRole('ROLE_SUPER_ADMIN');
     }
 
-    public function setSuperAdmin($boolean)
-    {
-        if (true === $boolean) {
-            $this->addRole('ROLE_SUPER_ADMIN');
-        } else {
-            $this->removeRole('ROLE_SUPER_ADMIN');
-        }
-
-        return $this;
-    }
 
     public function serialize()
     {
