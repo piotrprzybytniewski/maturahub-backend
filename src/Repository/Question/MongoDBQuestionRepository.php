@@ -27,7 +27,7 @@ class MongoDBQuestionRepository implements QuestionRepositoryInterface
                 [
                     ['$sample' => ['size' => $limit]],
                     [
-                        '$limit' => $limit,
+                        '$limit' => $limit > 20 ? 1: $limit,
                     ],
                 ]
             );

@@ -52,7 +52,7 @@ class APITestClient extends WebTestCase
     }
 
 
-    protected function authenticateUser(): ?Response
+    protected function authenticateUser(): Response
     {
         $this->client->request(
             'POST',
@@ -65,8 +65,8 @@ class APITestClient extends WebTestCase
         $response = $this->client->getResponse();
         return $response;
     }
-
-    protected function getAuthToken(): ?string
+    
+    protected function getAuthToken(): string
     {
         $authResponse = $this->authenticateUser();
         $token = $this->decode($authResponse->getContent())['token'];
@@ -74,9 +74,12 @@ class APITestClient extends WebTestCase
         return $token;
     }
 
-    protected function decode(string $body): ?array
+    protected function decode(string $responseBody): array
     {
-        return json_decode($body, true);
+        return json_decode($responseBody, true);
     }
 
+    protected function getData(string $responseBody): array {
+        return $this->decode($responseBody)['data'];
+    }
 }

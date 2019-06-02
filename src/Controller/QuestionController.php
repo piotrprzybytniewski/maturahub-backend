@@ -36,7 +36,7 @@ class QuestionController extends AbstractController
      * )
      * @SWG\Response(
      *     response="404",
-     *     description="error when data not found",
+     *     description="error when data not found or limit parameter is out of range 1-20",
      *     @SWG\Schema(
      *       @SWG\Property(property="error",type="object",
      *           @SWG\Property(property="code",type="integer", example=404,),
