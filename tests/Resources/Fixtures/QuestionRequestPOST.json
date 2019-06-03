@@ -1,0 +1,19 @@
+{
+  "data": [
+    {
+      "subject": "Matematyka",
+      "level": "podstawowy",
+      "section": "Równania",
+      "source": "CKE",
+      "question": "Ile to 2x2?",
+      "year": 2019,
+      "answer": {
+        "a": "5",
+        "b": "7",
+        "c": "8",
+        "d": "4",
+        "correct": "d"
+      }
+    }
+  ]
+}
