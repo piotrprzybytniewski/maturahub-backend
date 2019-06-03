@@ -27,6 +27,11 @@ class APITestClient extends WebTestCase
         parent::tearDown();
     }
 
+    protected function getJsonFixture($filename)
+    {
+        return file_get_contents('%kernel.root_dir%/../tests/Resources/Fixtures/'.$filename.'.json');
+    }
+
     protected function assertResponse(Response $response, $code = 200)
     {
         $this->assertResponseCode($response, $code);
@@ -63,9 +68,10 @@ class APITestClient extends WebTestCase
             '{"username": "test","password": "test"}'
         );
         $response = $this->client->getResponse();
+
         return $response;
     }
-    
+
     protected function getAuthToken(): string
     {
         $authResponse = $this->authenticateUser();
@@ -79,7 +85,8 @@ class APITestClient extends WebTestCase
         return json_decode($responseBody, true);
     }
 
-    protected function getData(string $responseBody): array {
+    protected function getData(string $responseBody): array
+    {
         return $this->decode($responseBody)['data'];
     }
 }
