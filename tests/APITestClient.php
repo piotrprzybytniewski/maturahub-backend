@@ -19,6 +19,9 @@ class APITestClient extends WebTestCase
     protected function setUpClient(): void
     {
         $this->client = static::createClient(array(), array('HTTP_ACCEPT' => 'application/json'));
+        $db = new MongoDatabaseFixtures();
+        $db->deleteAll();
+        $db->loadAll();
     }
 
     protected function tearDown(): void
@@ -79,6 +82,7 @@ class APITestClient extends WebTestCase
 
         return $token;
     }
+
 
     protected function decode(string $responseBody): array
     {

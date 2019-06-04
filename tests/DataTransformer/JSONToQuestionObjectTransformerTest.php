@@ -34,7 +34,7 @@ class JSONToQuestionObjectTransformerTest extends APITestClient
         $questions = $this->getData($this->getJsonFixture('QuestionsRequestPOST'));
 
         $this->serializer->expects(
-            $this->exactly(3)
+            $this->exactly(count($questions))
         )->method('deserialize')
             ->with($this->anything(), Question::class, 'json', ['allow_extra_fields' => false]);
         foreach ($questions as $question) {
@@ -45,7 +45,7 @@ class JSONToQuestionObjectTransformerTest extends APITestClient
     public function testTransformThrowsUnprocessableEntityException()
     {
         $question = ['incorrect question'];
-        $this->serializer->expects($this->exactly(1))
+        $this->serializer->expects($this->exactly(count($question)))
             ->method('deserialize')
             ->with($this->anything(), Question::class, 'json', ['allow_extra_fields' => false]);
         $this->serializer->method('deserialize')->will($this->throwException(new UnprocessableEntityHttpException()));

@@ -43,11 +43,14 @@ class MongoDBQuestionRepository implements QuestionRepositoryInterface
     {
         try {
             $questionsInserted = $this->collection->insertMany($questions);
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             throw new BadRequestHttpException('An error occured while inserting data');
         }
 
         return $questionsInserted->getInsertedIds();
     }
 
+    public function deleteAll() {
+        $this->collection->deleteMany([]);
+    }
 }
