@@ -1,8 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 
 namespace App\DataTransformer;
 
+use Throwable;
 use App\Document\Question;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 use Symfony\Component\Serializer\SerializerInterface;
@@ -26,7 +27,7 @@ class JSONToQuestionObjectTransformer
                 'json',
                 ['allow_extra_fields' => false]
             );
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             throw new UnprocessableEntityHttpException();
         }
 
