@@ -1,0 +1,31 @@
+security:
+    encoders:
+        App\Document\User:
+            algorithm: bcrypt
+    providers:
+        mongo_provider:
+            mongodb: {class: App\Document\User, property: username}
+
+    firewalls:
+        doc:
+            pattern:  ^/api/doc
+            security: false
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+        login:
+            pattern:  ^/api/login
+            stateless: true
+            anonymous: true
+            json_login:
+                check_path:               /api/login_check
+                success_handler:          lexik_jwt_authentication.handler.authentication_success
+                failure_handler:          lexik_jwt_authentication.handler.authentication_failure
+
+        api:
+            pattern:   ^/api
+            stateless: true
+            anonymous: true
+    access_control:
+        - { path: ^/api, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/api/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }

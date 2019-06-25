@@ -11,7 +11,6 @@
 /config/jwt/*.pem
 .DS_Store
 .env.dist
-/config/
 
 ###> symfony/phpunit-bridge ###
 .phpunit
