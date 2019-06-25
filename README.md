@@ -1,5 +1,5 @@
 # MaturaHUB - REST API
-REST API based on Symfony 4 that makes preparation for the final exam (Polish matura)
+REST API based on Symfony 4 that makes preparation for the final exam much easier (Polish matura)
 
 ## Built with
 * Symfony 4.2.9,
